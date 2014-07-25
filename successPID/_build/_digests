@@ -1,0 +1,5 @@
+"Resource: /home/john/WORKING_antoine/successPID/pid.ml": "=\236\153\134\233|\160\011\194L\165\000\023-\174\165"
+"Rule: ocaml: ml -> cmo & cmi (%=pid )": "I.\152\025\152\223'\227\011\181\133/\132\199\028\220"
+"Rule: ocaml dependencies ml (%=pid )": "7\232\151\022/K5\006%|\012\011$voF"
+"Rule: ocaml: cmx* & o* -> native (%=pid )": "\025\195\138\028\214?\002\197\139\229\215\0214bmo"
+"Rule: ocaml: ml & cmi -> cmx & o (%=pid )": "[\1865<\201\215B\1886\195\149\175\205@\210A"

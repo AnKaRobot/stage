@@ -1,0 +1,5 @@
+"Rule: ocaml dependencies ml (%=brain )": "\1369\138\150^\211\214\018V?M\171~[\015\192"
+"Rule: ocaml: cmx* & o* -> native (%=brain )": "\221\024\011\\Q\194\252\019b%\025\029\018w\255\178"
+"Resource: /home/john/WORKING_antoine/testRos2/brain.ml": "E\b\b\027H\162\128D\026\031\209V\005\203\200\254"
+"Rule: ocaml: ml -> cmo & cmi (%=brain )": "B\140\232\140\219v9\236\233\188\249u\201\240\187\176"
+"Rule: ocaml: ml & cmi -> cmx & o (%=brain )": ".[)v\173iH\197Yy\248\231\139\202\234\186"

@@ -1,0 +1,152 @@
+import camlpynet as cpn
+import threading as th
+import sys
+from socket import timeout
+import turtle as tu
+import Tkinter as tk
+from time import sleep
+import matplotlib
+matplotlib.use('TkAgg')
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from collections import deque
+
+refreshTime = 0.1
+
+class MesureReferenceControl :
+    def __init__ (self, m, r, c) :
+        self.m = deque([m for i in range(100)])
+        self.r = deque([r for i in range(100)])
+        self.c = deque([c for i in range(100)])
+    def appControl (self, c) :
+        self.c.popleft()
+        self.c.append(c)
+        self.m.popleft()
+        self.m.append(self.m[-1] + c)
+    def getMesure (self) : 
+        return self.m[-1]
+    def getReference (self) : 
+        return self.r[-1]
+
+def pidControlLoop (looping, getData, setControl) :
+    while looping() :
+        try :
+            data = getData()
+            try :
+                control = float(data)
+                setControl(control)
+                print >> sys.stderr, "control get : %f" % control
+            except ValueError : 
+                print >> sys.stderr, "control strange data : %s" % data
+        except timeout :
+            print >> sys.stderr, "*** Control TimeOut ***"
+
+def pidMesureLoop (looping, sendData, getMesure) :
+    while looping() :
+        data = str(getMesure())
+        try : 
+            sendData(data)
+        except timeout : 
+            print sys.stderr, "*** Mesure TimeOut ***" 
+        sleep(refreshTime)
+
+def pidReferenceLoop (looping, sendData, getReference) :
+    while looping() :
+        data = str(getReference())
+        try :
+            sendData(data)
+        except timeout :
+            print >> sys.stderr, "*** Reference TimeOut ***"
+        sleep(refreshTime)
+
+def pidscine () :
+
+    # PID control Server
+    try : pidControlServer = cpn.Caml2pyServer("/tmp/pidturtle/control")
+    except timeout as err : 
+        raise Exception("Impossible creation of server"), err
+    
+    try : pidControlServer.waitClient()
+    except timeout as err : 
+        raise Exception("No client"), err
+
+    # PID mesure client
+    try : pidMesureClient = cpn.Py2camlClient("/tmp/pidturtle/mesure")
+    except timeout as err :
+        raise Exception("Impossible creation of client"), err
+
+    # PID reference client
+    try : pidReferenceClient = cpn.Py2camlClient("/tmp/pidturtle/reference")
+    except timeout as err :
+        raise Exception("Impossible creation of client"), err
+
+    # TK canvas
+    mainWindow = tk.Tk()
+    canvas = tk.Canvas(mainWindow, width = 500, height = 300)
+    canvas.pack()
+    
+    values = MesureReferenceControl(0., 100., 0.)
+
+    # PyPlot
+    fig1 = plt.figure()
+    axes1 = fig1.add_subplot(2, 1, 1) # two rows, one column, first plot
+    axes1.set_ylabel("eau")
+    axes1.set_xlabel("temps")
+    axes1.set_ylim([0, 125])
+    line, = axes1.plot(values.c)
+
+    dataPlot = FigureCanvasTkAgg(fig1, master=mainWindow)
+    dataPlot.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+
+    mainThread = None
+    for t in th.enumerate() :
+        if t.name == "MainThread" : mainThread = t;
+
+    pidControlThread = th.Thread(
+        target = pidControlLoop,
+        args = (mainThread.isAlive, 
+                pidControlServer.getData,
+                values.appControl) )
+
+    pidMesureThread = th.Thread(
+        target = pidMesureLoop,
+        args = (mainThread.isAlive, 
+                pidMesureClient.sendData, 
+                values.getMesure) )
+
+    pidReferenceThread = th.Thread(
+        target = pidReferenceLoop,
+        args = (mainThread.isAlive, 
+                pidReferenceClient.sendData, 
+                values.getReference) )
+
+    pidControlThread.start()
+    pidMesureThread.start()
+    pidReferenceThread.start()
+    mainWindow.mainloop()
+
+    while True :
+        line.set_ydata(values.m)
+        axes1.relim()
+        axes1.autoscale_view()
+        plt.draw()
+        sleep(0.1)
+
+    try :
+        pidControlServer.closeClient()
+        pidControlServer.closeServer()
+        pidMesureClient.close()
+        pidReferenceClient.close()
+    except : raise # TODO
+    finally : 
+        print >> sys.stderr, "End test turtle" 
+        exit()
+
+# end testTurtle
+
+
+if __name__ == "__main__" :
+    pidscine()
+
+
+

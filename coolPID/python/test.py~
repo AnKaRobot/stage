@@ -1,0 +1,28 @@
+import camlpynet as cpn
+import threading as th
+import sys
+
+class Angle :
+    def __init__ (self, init) :
+        self.v = init
+
+def testTurtle () :
+
+    angle = Angle(0)
+
+    def protocolMesure (data, server) :
+        data = data[:-1]
+        try :
+            angle.v = int(data)
+            print >> sys.stderr, "angle : %d" % angle.v
+        except ValueError : 
+            if data == "stop" : server.closeConnection()
+            else : 
+                print >> sys.stderr, "strange value : \"%s\"" % data
+                raise
+        return protocolMesure
+    mesure = th.Thread(cpn.Py2caml("/tmp/turtle/py2caml/mesure", protocolMesure))
+    print >> sys.stderr, "coucou" 
+
+if __name__ == "__main__" :
+    testTurtle()

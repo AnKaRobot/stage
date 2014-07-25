@@ -1,0 +1,273 @@
+### Starting build.
+include directories are: [ "." ]
+==> brain.native
+====> brain.cmx
+======> brain.mlpack
+======> brain.ml
+======> brain.ml.depends
+========> brain.ml
+mid rule ocaml dependencies ml (%=brain ): cache miss: a dependency has changed (brain.ml)
+# Target: brain.ml.depends, tags: { extension:ml, file:brain.ml, ocaml, ocamldep, ourincludesettings, ourocamldocsettings, ourppsettings, quiet, traverse }
+/home/john/.opam/3.12.1/bin/ocamldep.opt -modules brain.ml > brain.ml.depends
+======> brain.cmi
+========> brain.mli
+==========> brain.mly
+========> brain.mlpack
+========> brain.ml
+========> brain.ml.depends
+========> cortex.cmi
+==========> cortex.mli
+============> cortex.mly
+==========> cortex.mlpack
+==========> cortex.ml
+============> cortex.mll
+============> cortex.mly
+========> Cortex.cmi
+==========> Cortex.mli
+============> Cortex.mly
+==========> Cortex.mlpack
+==========> Cortex.ml
+============> Cortex.mll
+============> Cortex.mly
+========> cortex_lib.cmi
+==========> cortex_lib.mli
+============> cortex_lib.mly
+==========> cortex_lib.mlpack
+==========> cortex_lib.ml
+============> cortex_lib.mll
+============> cortex_lib.mly
+========> Cortex_lib.cmi
+==========> Cortex_lib.mli
+============> Cortex_lib.mly
+==========> Cortex_lib.mlpack
+==========> Cortex_lib.ml
+============> Cortex_lib.mll
+============> Cortex_lib.mly
+========> network.cmi
+==========> network.mli
+============> network.mly
+==========> network.mlpack
+==========> network.ml
+============> network.mll
+============> network.mly
+========> Network.cmi
+==========> Network.mli
+============> Network.mly
+==========> Network.mlpack
+==========> Network.ml
+============> Network.mll
+============> Network.mly
+========> ocamlbricks_log.cmi
+==========> ocamlbricks_log.mli
+============> ocamlbricks_log.mly
+==========> ocamlbricks_log.mlpack
+==========> ocamlbricks_log.ml
+============> ocamlbricks_log.mll
+============> ocamlbricks_log.mly
+========> Ocamlbricks_log.cmi
+==========> Ocamlbricks_log.mli
+============> Ocamlbricks_log.mly
+==========> Ocamlbricks_log.mlpack
+==========> Ocamlbricks_log.ml
+============> Ocamlbricks_log.mll
+============> Ocamlbricks_log.mly
+========> printexc.cmi
+==========> printexc.mli
+============> printexc.mly
+==========> printexc.mlpack
+==========> printexc.ml
+============> printexc.mll
+============> printexc.mly
+========> Printexc.cmi
+==========> Printexc.mli
+============> Printexc.mly
+==========> Printexc.mlpack
+==========> Printexc.ml
+============> Printexc.mll
+============> Printexc.mly
+========> printf.cmi
+==========> printf.mli
+============> printf.mly
+==========> printf.mlpack
+==========> printf.ml
+============> printf.mll
+============> printf.mly
+========> Printf.cmi
+==========> Printf.mli
+============> Printf.mly
+==========> Printf.mlpack
+==========> Printf.ml
+============> Printf.mll
+============> Printf.mly
+========> thread.cmi
+==========> thread.mli
+============> thread.mly
+==========> thread.mlpack
+==========> thread.ml
+============> thread.mll
+============> thread.mly
+========> Thread.cmi
+==========> Thread.mli
+============> Thread.mly
+==========> Thread.mlpack
+==========> Thread.ml
+============> Thread.mll
+============> Thread.mly
+Warning: Failed to build the module Cortex requested by ocamldep
+Warning: Failed to build the module Cortex_lib requested by ocamldep
+Warning: Failed to build the module Network requested by ocamldep
+Warning: Failed to build the module Ocamlbricks_log requested by ocamldep
+Warning: Failed to build the module Thread requested by ocamldep
+mid rule ocaml: ml -> cmo & cmi (%=brain ): cache miss: a dependency has changed (brain.ml)
+# Target: brain.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:brain.cmo, file:brain.ml, implem, ocaml, ourbytecompilesettings, ourincludesettings, ourocamldocsettings, ourppsettings, quiet, traverse }
+/home/john/.opam/3.12.1/bin/ocamlc.opt -c -thread -g -w x -I /home/john/.opam/3.12.1/lib/ocaml -I /home/john/.opam/3.12.1/lib/ocaml/camlp4 -I /home/john/.opam/3.12.1/lib/ocaml/threads -I /home/john/.opam/3.12.1/lib/camlp4 -I /home/john/.opam/3.12.1/lib/threads -I /home/john/.opam/3.12.1/lib/lablgtk2 -I /home/john/.opam/3.12.1/lib/ocamlbricks -o brain.cmo brain.ml
++ /home/john/.opam/3.12.1/bin/ocamlc.opt -c -thread -g -w x -I /home/john/.opam/3.12.1/lib/ocaml -I /home/john/.opam/3.12.1/lib/ocaml/camlp4 -I /home/john/.opam/3.12.1/lib/ocaml/threads -I /home/john/.opam/3.12.1/lib/camlp4 -I /home/john/.opam/3.12.1/lib/threads -I /home/john/.opam/3.12.1/lib/lablgtk2 -I /home/john/.opam/3.12.1/lib/ocamlbricks -o brain.cmo brain.ml
+File "brain.ml", line 61, characters 10-53:
+Warning 10: this expression should have type unit.
+File "brain.ml", line 141, characters 47-160:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a value that is not matched:
+Some _
+(However, some guarded clause may match this value.)
+======> cortex.cmx
+========> cortex.mlpack
+========> cortex.ml
+======> Cortex.cmx
+========> Cortex.mlpack
+========> Cortex.ml
+======> cortex.cmi
+======> Cortex.cmi
+======> cortex_lib.cmx
+========> cortex_lib.mlpack
+========> cortex_lib.ml
+======> Cortex_lib.cmx
+========> Cortex_lib.mlpack
+========> Cortex_lib.ml
+======> cortex_lib.cmi
+======> Cortex_lib.cmi
+======> network.cmx
+========> network.mlpack
+========> network.ml
+======> Network.cmx
+========> Network.mlpack
+========> Network.ml
+======> network.cmi
+======> Network.cmi
+======> ocamlbricks_log.cmx
+========> ocamlbricks_log.mlpack
+========> ocamlbricks_log.ml
+======> Ocamlbricks_log.cmx
+========> Ocamlbricks_log.mlpack
+========> Ocamlbricks_log.ml
+======> ocamlbricks_log.cmi
+======> Ocamlbricks_log.cmi
+======> printexc.cmx
+========> printexc.mlpack
+========> printexc.ml
+======> Printexc.cmx
+========> Printexc.mlpack
+========> Printexc.ml
+======> printexc.cmi
+======> Printexc.cmi
+======> printf.cmx
+========> printf.mlpack
+========> printf.ml
+======> Printf.cmx
+========> Printf.mlpack
+========> Printf.ml
+======> printf.cmi
+======> Printf.cmi
+======> thread.cmx
+========> thread.mlpack
+========> thread.ml
+======> Thread.cmx
+========> Thread.mlpack
+========> Thread.ml
+======> thread.cmi
+======> Thread.cmi
+mid rule ocaml: ml & cmi -> cmx & o (%=brain ): cache miss: a dependency has changed (brain.ml)
+# Target: brain.cmx, tags: { compile, extension:cmx, extension:ml, file:brain.cmx, file:brain.ml, implem, native, ocaml, ourincludesettings, ournativecompilesettings, ourocamldocsettings, ourppsettings, quiet, traverse }
+/home/john/.opam/3.12.1/bin/ocamlopt.opt -c -thread -g -w x -I /home/john/.opam/3.12.1/lib/ocaml -I /home/john/.opam/3.12.1/lib/ocaml/camlp4 -I /home/john/.opam/3.12.1/lib/ocaml/threads -I /home/john/.opam/3.12.1/lib/camlp4 -I /home/john/.opam/3.12.1/lib/threads -I /home/john/.opam/3.12.1/lib/lablgtk2 -I /home/john/.opam/3.12.1/lib/ocamlbricks -o brain.cmx brain.ml
++ /home/john/.opam/3.12.1/bin/ocamlopt.opt -c -thread -g -w x -I /home/john/.opam/3.12.1/lib/ocaml -I /home/john/.opam/3.12.1/lib/ocaml/camlp4 -I /home/john/.opam/3.12.1/lib/ocaml/threads -I /home/john/.opam/3.12.1/lib/camlp4 -I /home/john/.opam/3.12.1/lib/threads -I /home/john/.opam/3.12.1/lib/lablgtk2 -I /home/john/.opam/3.12.1/lib/ocamlbricks -o brain.cmx brain.ml
+File "brain.ml", line 61, characters 10-53:
+Warning 10: this expression should have type unit.
+File "brain.ml", line 141, characters 47-160:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a value that is not matched:
+Some _
+(However, some guarded clause may match this value.)
+====> brain.o
+====> cortex.o
+======> cortex.mlpack
+======> cortex.ml
+======> cortex.c
+====> Cortex.o
+======> Cortex.mlpack
+======> Cortex.ml
+======> Cortex.c
+====> cortex.cmi
+====> Cortex.cmi
+====> cortex_lib.o
+======> cortex_lib.mlpack
+======> cortex_lib.ml
+======> cortex_lib.c
+====> Cortex_lib.o
+======> Cortex_lib.mlpack
+======> Cortex_lib.ml
+======> Cortex_lib.c
+====> cortex_lib.cmi
+====> Cortex_lib.cmi
+====> network.o
+======> network.mlpack
+======> network.ml
+======> network.c
+====> Network.o
+======> Network.mlpack
+======> Network.ml
+======> Network.c
+====> network.cmi
+====> Network.cmi
+====> ocamlbricks_log.o
+======> ocamlbricks_log.mlpack
+======> ocamlbricks_log.ml
+======> ocamlbricks_log.c
+====> Ocamlbricks_log.o
+======> Ocamlbricks_log.mlpack
+======> Ocamlbricks_log.ml
+======> Ocamlbricks_log.c
+====> ocamlbricks_log.cmi
+====> Ocamlbricks_log.cmi
+====> printexc.o
+======> printexc.mlpack
+======> printexc.ml
+======> printexc.c
+====> Printexc.o
+======> Printexc.mlpack
+======> Printexc.ml
+======> Printexc.c
+====> printexc.cmi
+====> Printexc.cmi
+====> printf.o
+======> printf.mlpack
+======> printf.ml
+======> printf.c
+====> Printf.o
+======> Printf.mlpack
+======> Printf.ml
+======> Printf.c
+====> printf.cmi
+====> Printf.cmi
+====> thread.o
+======> thread.mlpack
+======> thread.ml
+======> thread.c
+====> Thread.o
+======> Thread.mlpack
+======> Thread.ml
+======> Thread.c
+====> thread.cmi
+====> Thread.cmi
+mid rule ocaml: cmx* & o* -> native (%=brain ): cache miss: a dependency has changed (brain.cmx)
+# Target: brain.native, tags: { dont_link_with, extension:native, file:brain.native, link, native, ocaml, ourcmodules, ourincludesettings, ournativelinksettings, program, quiet, traverse }
+/home/john/.opam/3.12.1/bin/ocamlopt.opt -thread -g -w x -I /home/john/.opam/3.12.1/lib/ocaml -I /home/john/.opam/3.12.1/lib/ocaml/camlp4 -I /home/john/.opam/3.12.1/lib/ocaml/threads -I /home/john/.opam/3.12.1/lib/camlp4 -I /home/john/.opam/3.12.1/lib/threads -I /home/john/.opam/3.12.1/lib/lablgtk2 -I /home/john/.opam/3.12.1/lib/ocamlbricks unix.cmxa threads.cmxa str.cmxa lablgtk.cmxa ocamlbricks.cmxa brain.cmx -o brain.native
+# Compilation successful.

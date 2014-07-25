@@ -1,0 +1,22 @@
+Il faut retenir que :
+
+__1____
+on_proposal n'est lancé QUE si la valeur proposée est différente. Sinon il n'est pas lancé du tout.
+Ce qui signifie qu'on va boucler sur on_proposal jusqu'à trouver une valeur demandée identique à la valeur présente.
+
+__2____
+Ce code produit des résultats étranges :
+let ab = Cortex.group_pair
+~on_proposal:(fun (o1, o2) (n1, n2) -> 
+let () = print_endline "group" in match (n1, n2) with 
+| (n1, n2) when n1 < 10 -> (10, n2)
+| _ -> (n1, n2)
+)
+a
+b
+;;
+
+En effet, si on effectue l'action 
+Cortex.set 
+Cortex.set a 2;;
+alors Cortex.get ab;; donne bien (10, valeurB)

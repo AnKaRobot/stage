@@ -1,0 +1,4 @@
+Il faut retenir que :
+on_proposal n'est lancé QUE si la valeur proposée est différente. Sinon il n'est pas lancé du tout.
+Ce qui signifie qu'on va boucler sur on_proposal jusqu'à trouver une valeur demandée identique à la valur présente.
+

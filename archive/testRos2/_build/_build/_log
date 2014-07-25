@@ -1,0 +1,16 @@
+### Starting build.
+include directories are: [ "." ]
+==> brain.native
+====> brain.cmx
+======> brain.mlpack
+======> brain.ml
+======> brain.ml.depends
+========> brain.ml
+mid rule ocaml dependencies ml (%=brain ): cache miss: the digest has changed for "ocaml dependencies ml (%=brain )" (the command, a dependency, or a product: 88398a965ed3d612563f4dab7e5b0fc0 <> 60bf80f8bbdaa3b49f6677e78d473473)
+# Target: brain.ml.depends, tags: { extension:ml, file:brain.ml, ocaml, ocamldep, ourincludesettings, ourocamldocsettings, ourppsettings, quiet, traverse }
+/home/john/.opam/3.12.1/bin/ocamldep.opt -modules brain.ml > brain.ml.depends
++ /home/john/.opam/3.12.1/bin/ocamldep.opt -modules brain.ml > brain.ml.depends
+File "brain.ml", line 100, characters 19-20:
+Error: Syntax error
+Command exited with code 2.
+# Compilation unsuccessful.

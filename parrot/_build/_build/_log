@@ -1,0 +1,126 @@
+### Starting build.
+include directories are: [ "." ]
+==> parrot.native
+====> parrot.cmx
+======> parrot.mlpack
+======> parrot.ml
+======> parrot.ml.depends
+========> parrot.ml
+mid rule ocaml dependencies ml (%=parrot ): cache miss: a dependency has changed (parrot.ml)
+# Target: parrot.ml.depends, tags: { extension:ml, file:parrot.ml, ocaml, ocamldep, ourincludesettings, ourocamldocsettings, ourppsettings, quiet, traverse }
+/home/john/.opam/3.12.1/bin/ocamldep.opt -modules parrot.ml > parrot.ml.depends
+======> parrot.cmi
+========> parrot.mli
+==========> parrot.mly
+========> parrot.mlpack
+========> parrot.ml
+========> parrot.ml.depends
+========> cortex.cmi
+==========> cortex.mli
+============> cortex.mly
+==========> cortex.mlpack
+==========> cortex.ml
+============> cortex.mll
+============> cortex.mly
+========> Cortex.cmi
+==========> Cortex.mli
+============> Cortex.mly
+==========> Cortex.mlpack
+==========> Cortex.ml
+============> Cortex.mll
+============> Cortex.mly
+========> cortex_lib.cmi
+==========> cortex_lib.mli
+============> cortex_lib.mly
+==========> cortex_lib.mlpack
+==========> cortex_lib.ml
+============> cortex_lib.mll
+============> cortex_lib.mly
+========> Cortex_lib.cmi
+==========> Cortex_lib.mli
+============> Cortex_lib.mly
+==========> Cortex_lib.mlpack
+==========> Cortex_lib.ml
+============> Cortex_lib.mll
+============> Cortex_lib.mly
+========> printf.cmi
+==========> printf.mli
+============> printf.mly
+==========> printf.mlpack
+==========> printf.ml
+============> printf.mll
+============> printf.mly
+========> Printf.cmi
+==========> Printf.mli
+============> Printf.mly
+==========> Printf.mlpack
+==========> Printf.ml
+============> Printf.mll
+============> Printf.mly
+Warning: Failed to build the module Cortex requested by ocamldep
+Warning: Failed to build the module Cortex_lib requested by ocamldep
+mid rule ocaml: ml -> cmo & cmi (%=parrot ): cache miss: a dependency has changed (parrot.ml)
+# Target: parrot.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:parrot.cmo, file:parrot.ml, implem, ocaml, ourbytecompilesettings, ourincludesettings, ourocamldocsettings, ourppsettings, quiet, traverse }
+/home/john/.opam/3.12.1/bin/ocamlc.opt -c -thread -g -w x -I /home/john/.opam/3.12.1/lib/ocaml -I /home/john/.opam/3.12.1/lib/ocaml/camlp4 -I /home/john/.opam/3.12.1/lib/ocaml/threads -I /home/john/.opam/3.12.1/lib/camlp4 -I /home/john/.opam/3.12.1/lib/threads -I /home/john/.opam/3.12.1/lib/lablgtk2 -I /home/john/.opam/3.12.1/lib/ocamlbricks -o parrot.cmo parrot.ml
+======> cortex.cmx
+========> cortex.mlpack
+========> cortex.ml
+======> Cortex.cmx
+========> Cortex.mlpack
+========> Cortex.ml
+======> cortex.cmi
+======> Cortex.cmi
+======> cortex_lib.cmx
+========> cortex_lib.mlpack
+========> cortex_lib.ml
+======> Cortex_lib.cmx
+========> Cortex_lib.mlpack
+========> Cortex_lib.ml
+======> cortex_lib.cmi
+======> Cortex_lib.cmi
+======> printf.cmx
+========> printf.mlpack
+========> printf.ml
+======> Printf.cmx
+========> Printf.mlpack
+========> Printf.ml
+======> printf.cmi
+======> Printf.cmi
+mid rule ocaml: ml & cmi -> cmx & o (%=parrot ): cache miss: a dependency has changed (parrot.ml)
+# Target: parrot.cmx, tags: { compile, extension:cmx, extension:ml, file:parrot.cmx, file:parrot.ml, implem, native, ocaml, ourincludesettings, ournativecompilesettings, ourocamldocsettings, ourppsettings, quiet, traverse }
+/home/john/.opam/3.12.1/bin/ocamlopt.opt -c -thread -g -w x -I /home/john/.opam/3.12.1/lib/ocaml -I /home/john/.opam/3.12.1/lib/ocaml/camlp4 -I /home/john/.opam/3.12.1/lib/ocaml/threads -I /home/john/.opam/3.12.1/lib/camlp4 -I /home/john/.opam/3.12.1/lib/threads -I /home/john/.opam/3.12.1/lib/lablgtk2 -I /home/john/.opam/3.12.1/lib/ocamlbricks -o parrot.cmx parrot.ml
+====> parrot.o
+====> cortex.o
+======> cortex.mlpack
+======> cortex.ml
+======> cortex.c
+====> Cortex.o
+======> Cortex.mlpack
+======> Cortex.ml
+======> Cortex.c
+====> cortex.cmi
+====> Cortex.cmi
+====> cortex_lib.o
+======> cortex_lib.mlpack
+======> cortex_lib.ml
+======> cortex_lib.c
+====> Cortex_lib.o
+======> Cortex_lib.mlpack
+======> Cortex_lib.ml
+======> Cortex_lib.c
+====> cortex_lib.cmi
+====> Cortex_lib.cmi
+====> printf.o
+======> printf.mlpack
+======> printf.ml
+======> printf.c
+====> Printf.o
+======> Printf.mlpack
+======> Printf.ml
+======> Printf.c
+====> printf.cmi
+====> Printf.cmi
+mid rule ocaml: cmx* & o* -> native (%=parrot ): cache miss: a dependency has changed (parrot.o)
+# Target: parrot.native, tags: { dont_link_with, extension:native, file:parrot.native, link, native, ocaml, ourcmodules, ourincludesettings, ournativelinksettings, program, quiet, traverse }
+/home/john/.opam/3.12.1/bin/ocamlopt.opt -thread -g -w x -I /home/john/.opam/3.12.1/lib/ocaml -I /home/john/.opam/3.12.1/lib/ocaml/camlp4 -I /home/john/.opam/3.12.1/lib/ocaml/threads -I /home/john/.opam/3.12.1/lib/camlp4 -I /home/john/.opam/3.12.1/lib/threads -I /home/john/.opam/3.12.1/lib/lablgtk2 -I /home/john/.opam/3.12.1/lib/ocamlbricks unix.cmxa threads.cmxa str.cmxa lablgtk.cmxa ocamlbricks.cmxa parrot.cmx -o parrot.native
+# Compilation successful.

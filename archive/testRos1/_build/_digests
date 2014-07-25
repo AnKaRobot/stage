@@ -1,0 +1,5 @@
+"Rule: ocaml dependencies ml (%=intelligence2 )": "\166H\b\222G;\129PE\246\191A\255\005v\022"
+"Rule: ocaml: ml -> cmo & cmi (%=intelligence2 )": "b\213\223\203\016/\1637\211OV~a\021\160\241"
+"Rule: ocaml: cmx* & o* -> native (%=intelligence2 )": "\196\r\1575P\196e\216\192\246\1986p!\201\203"
+"Rule: ocaml: ml & cmi -> cmx & o (%=intelligence2 )": "H~\007b\019>\023\025\214\180\218a\249\006,J"
+"Resource: /home/john/WORKING_antoine/intelligence2.ml": "\147\146\\\127\0268x\006;6\167|\218H\245\202"

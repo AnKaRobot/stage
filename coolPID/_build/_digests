@@ -1,0 +1,6 @@
+"Rule: ocaml dependencies ml (%=brain )": "\018X\002s,\014\151\241\245s\138\000\":R5"
+"Rule: ocaml: cmx* & o* -> native (%=brain )": "\243\024\247w^\245\186]\179\220\180\138\208\145\170O"
+"Resource: /home/john/WORKING_antoine/pid/brain.ml": "T\184\208\136b&f\006J\150\0318\162k\030\136"
+"Resource: /home/john/WORKING_antoine/coolPID/brain.ml": "\214\145\182\246\004 \164E\197)\027D\204\207\148\007"
+"Rule: ocaml: ml -> cmo & cmi (%=brain )": "?\164\250l`\150)\233\192\030:x\020-b\138"
+"Rule: ocaml: ml & cmi -> cmx & o (%=brain )": "\016\142W\152\200\184\172l\235\143[\237\129+\157?"

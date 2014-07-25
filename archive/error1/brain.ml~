@@ -1,0 +1,130 @@
+(* Thread-efficient printf *)
+let scream fmt = Printf.kfprintf flush stdout fmt
+
+
+let s x = match x with
+| None -> "N"
+| Some v -> string_of_int v
+
+
+
+let a = Cortex.return
+  ~on_proposal:begin fun old prop ->
+    let () = scream "a [proposal] old : %s prop : %s\n" (s old) (s prop) in
+    prop
+    end
+  ~on_commit:begin fun old accept ->
+    scream "a [commit] old : %s accept : %s\n" (s old) (s accept)
+    end
+  None
+;;
+
+let b = Cortex.return
+  ~on_proposal:begin fun old prop ->
+    let () = scream "b [proposal] old : %s prop : %s\n" (s old) (s prop) in
+    prop
+    end
+  ~on_commit:begin fun old accept ->
+    scream "b [commit] old : %s accept : %s\n" (s old) (s accept)
+    end
+  None
+;;
+
+let c = Cortex.return
+  ~on_proposal:begin fun old prop ->
+    let () = scream "c [proposal] old : %s prop : %s\n" (s old) (s prop) in
+    prop
+    end
+  ~on_commit:begin fun old accept ->
+    scream "c [commit] old : %s accept : %s\n" (s old) (s accept)
+    end
+  None
+;;
+
+let ab = Cortex.group_pair
+  ~on_proposal:begin fun (a1, b1) (a2, b2) ->
+    let () = scream "ab [proposal] old : (%s, %s) prop : (%s, %s)\n" 
+        (s a1) (s b1) (s a2) (s b2) in 
+    match (a2, b2) with
+    | (None, None) -> (a2, b2)
+    | (Some v, None) -> begin match a1 with
+                        | Some w when w <> v -> (a2, a1)
+                        | _ -> (a2, b2)
+                        end
+    | (None, Some v) -> begin match b1 with
+                        | Some w when w <> v -> (b1, b2)
+                        | _ -> (a2, b2)
+                        end
+    | (Some v, Some x) -> begin match (a1, b1) with
+                        | (Some w, Some y) when w <> v && x = y -> (a2, a1)
+                        | (Some w, Some y) when w = v && x <> y -> (b1, b2)
+                        | (Some w, Some y) when w <> v && x <> y -> (a2, b2)
+                        | (Some w, Some y) when w = v && x = y -> (a2, b2)
+                        | (Some w, None) -> (a2, b2)
+                        | (None, Some y) -> (a2, b2)
+                        | (None, None) -> (a2, b2)
+                        | _ -> (a1, b1)
+                        end
+    end
+  ~on_commit:begin fun (a1, b1) (a2, b2) ->
+    scream "ab [commit] old : (%s, %s) accept : (%s, %s)\n" 
+      (s a1) (s b1) (s a2) (s b2)
+    end
+  a
+  b
+;;
+
+
+let bc = Cortex.group_pair
+  ~on_proposal:begin fun (a1, b1) (a2, b2) ->
+    let () = scream "bc [proposal] old : (%s, %s) prop : (%s, %s)\n" 
+        (s a1) (s b1) (s a2) (s b2) in 
+    match (a1, b1) with 
+    | (None, None) -> (a2, b2)
+    | (Some x, None) -> begin match (a2, b2) with
+                        | (a2, b2) when a1 = a2 && b1 = b2 -> (a1, b1)
+                        | (a2, b2) when a1 = a2 -> (a2, b2)
+                        | (a2, b2) when b1 = b2 -> (a2, a1)
+                        end
+    | (None, Some y) -> begin match (a2, b2) with
+                        | (a2, b2) when a1 = a2 -> (b2, b1)
+                        | (a2, b2) when b1 = b2 -> (a2, b2)
+                        end
+    | (Some x, Some y) -> begin match (a2, b2) with
+                        | (a2, b2) when a1 = a2 -> (b2, b1)
+                        | (a2, b2) when b1 = b2 -> (a2, a1)
+                        end
+    end
+  ~on_commit:begin fun (a1, b1) (a2, b2) ->
+    scream "bc [commit] old : (%s, %s) accept : (%s, %s)\n" 
+      (s a1) (s b1) (s a2) (s b2)
+    end
+  b
+  c
+;;
+
+
+(*
+let ac = Cortex.group_pair
+  ~on_proposal:begin fun (a1, b1) (a2, b2) ->
+    let () = scream "ac [proposal] old : (%d, %d) prop : (%d, %d)\n" a1 b1 a2 b2 in 
+    match (a2, b2) with 
+    | (a2, b2) when a2 > b2 -> (b2, a2)
+    | _ -> (a2, b2)
+    end
+  ~on_commit:begin fun (a1, b1) (a2, b2) ->
+    scream "ac [commit] old : (%d, %d) accept : (%d, %d)\n" a1 b1 a2 b2
+    end
+  a
+  c
+;;
+
+*)
+
+let rec loop t =
+  if t < 0 then ()
+  else 
+    let () = Thread.delay 1.0 in loop (t - 1)
+;;
+
+(*loop 2;;*)

@@ -1,0 +1,5 @@
+Un ~on_proposal qui propose la même chose que la valeur initiale ne sera pas lancé. Cela paraît logique, si l'on veut donner 3 à [x], mais que [x] veut être pair, [x] proposera alors sa valeur initiale, par exemple 2. Comme il proposera sa valeur initiale, il ne fera pas d'assignation.
+Cependant, cela est déroutant dans le cas d'un groupe :
+Un groupe [z] qui veut que [x] + [y] soit pair refusera des assignations qui violent cette règle. Cependant, s'il propose de revenir à la valeur initiale du groupe, il ne propagera donc pas l'information. Et si [z] vaudra (0, 0);
+[x] vaudra 1 et y vaudra 0.
+

@@ -1,0 +1,5 @@
+"Resource: /home/john/WORKING_antoine/parrot/parrot.ml": "\144\155\191\205\220gO\217\176#R\138Z\190K\021"
+"Rule: ocaml: cmx* & o* -> native (%=parrot )": "\175\023\225|Z\177\252\0288\231~b\221\004\233,"
+"Rule: ocaml: ml & cmi -> cmx & o (%=parrot )": "TO\128v\176\016\239\188\252\140\171\241\247\214 \242"
+"Rule: ocaml: ml -> cmo & cmi (%=parrot )": "\133F9\159\174\022\181\203\177i_\172\246V\252\137"
+"Rule: ocaml dependencies ml (%=parrot )": "\140\158t\127\141\022JQ\145\004\027\149R\197C."

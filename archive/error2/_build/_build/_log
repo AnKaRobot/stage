@@ -1,0 +1,93 @@
+### Starting build.
+include directories are: [ "." ]
+==> brain.native
+====> brain.cmx
+======> brain.mlpack
+======> brain.ml
+======> brain.ml.depends
+========> brain.ml
+mid rule ocaml dependencies ml (%=brain ): cache miss: a dependency has changed (brain.ml)
+# Target: brain.ml.depends, tags: { extension:ml, file:brain.ml, ocaml, ocamldep, ourincludesettings, ourocamldocsettings, ourppsettings, quiet, traverse }
+/home/john/.opam/3.12.1/bin/ocamldep.opt -modules brain.ml > brain.ml.depends
+======> brain.cmi
+========> brain.mli
+==========> brain.mly
+========> brain.mlpack
+========> brain.ml
+========> brain.ml.depends
+========> cortex.cmi
+==========> cortex.mli
+============> cortex.mly
+==========> cortex.mlpack
+==========> cortex.ml
+============> cortex.mll
+============> cortex.mly
+========> Cortex.cmi
+==========> Cortex.mli
+============> Cortex.mly
+==========> Cortex.mlpack
+==========> Cortex.ml
+============> Cortex.mll
+============> Cortex.mly
+========> printf.cmi
+==========> printf.mli
+============> printf.mly
+==========> printf.mlpack
+==========> printf.ml
+============> printf.mll
+============> printf.mly
+========> Printf.cmi
+==========> Printf.mli
+============> Printf.mly
+==========> Printf.mlpack
+==========> Printf.ml
+============> Printf.mll
+============> Printf.mly
+Warning: Failed to build the module Cortex requested by ocamldep
+mid rule ocaml: ml -> cmo & cmi (%=brain ): cache miss: a dependency has changed (brain.ml)
+# Target: brain.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:brain.cmo, file:brain.ml, implem, ocaml, ourbytecompilesettings, ourincludesettings, ourocamldocsettings, ourppsettings, quiet, traverse }
+/home/john/.opam/3.12.1/bin/ocamlc.opt -c -thread -g -w x -I /home/john/.opam/3.12.1/lib/ocaml -I /home/john/.opam/3.12.1/lib/ocaml/camlp4 -I /home/john/.opam/3.12.1/lib/ocaml/threads -I /home/john/.opam/3.12.1/lib/camlp4 -I /home/john/.opam/3.12.1/lib/threads -I /home/john/.opam/3.12.1/lib/lablgtk2 -I /home/john/.opam/3.12.1/lib/ocamlbricks -o brain.cmo brain.ml
+======> cortex.cmx
+========> cortex.mlpack
+========> cortex.ml
+======> Cortex.cmx
+========> Cortex.mlpack
+========> Cortex.ml
+======> cortex.cmi
+======> Cortex.cmi
+======> printf.cmx
+========> printf.mlpack
+========> printf.ml
+======> Printf.cmx
+========> Printf.mlpack
+========> Printf.ml
+======> printf.cmi
+======> Printf.cmi
+mid rule ocaml: ml & cmi -> cmx & o (%=brain ): cache miss: a dependency has changed (brain.ml)
+# Target: brain.cmx, tags: { compile, extension:cmx, extension:ml, file:brain.cmx, file:brain.ml, implem, native, ocaml, ourincludesettings, ournativecompilesettings, ourocamldocsettings, ourppsettings, quiet, traverse }
+/home/john/.opam/3.12.1/bin/ocamlopt.opt -c -thread -g -w x -I /home/john/.opam/3.12.1/lib/ocaml -I /home/john/.opam/3.12.1/lib/ocaml/camlp4 -I /home/john/.opam/3.12.1/lib/ocaml/threads -I /home/john/.opam/3.12.1/lib/camlp4 -I /home/john/.opam/3.12.1/lib/threads -I /home/john/.opam/3.12.1/lib/lablgtk2 -I /home/john/.opam/3.12.1/lib/ocamlbricks -o brain.cmx brain.ml
+====> brain.o
+====> cortex.o
+======> cortex.mlpack
+======> cortex.ml
+======> cortex.c
+====> Cortex.o
+======> Cortex.mlpack
+======> Cortex.ml
+======> Cortex.c
+====> cortex.cmi
+====> Cortex.cmi
+====> printf.o
+======> printf.mlpack
+======> printf.ml
+======> printf.c
+====> Printf.o
+======> Printf.mlpack
+======> Printf.ml
+======> Printf.c
+====> printf.cmi
+====> Printf.cmi
+mid rule ocaml: cmx* & o* -> native (%=brain ): cache miss: a dependency has changed (brain.o)
+# Target: brain.native, tags: { dont_link_with, extension:native, file:brain.native, link, native, ocaml, ourcmodules, ourincludesettings, ournativelinksettings, program, quiet, traverse }
+/home/john/.opam/3.12.1/bin/ocamlopt.opt -thread -g -w x -I /home/john/.opam/3.12.1/lib/ocaml -I /home/john/.opam/3.12.1/lib/ocaml/camlp4 -I /home/john/.opam/3.12.1/lib/ocaml/threads -I /home/john/.opam/3.12.1/lib/camlp4 -I /home/john/.opam/3.12.1/lib/threads -I /home/john/.opam/3.12.1/lib/lablgtk2 -I /home/john/.opam/3.12.1/lib/ocamlbricks unix.cmxa threads.cmxa str.cmxa lablgtk.cmxa ocamlbricks.cmxa brain.cmx -o brain.native
+# Compilation successful.

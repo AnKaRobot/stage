@@ -1,0 +1,16 @@
+COMPILE_OPTIONS += -g -w x
+DIRECTORIES_TO_INCLUDE = camlp4 threads lablgtk2 ocamlbricks
+LIBRARIES_TO_LINK = unix threads str lablgtk ocamlbricks
+C_OBJECTS_TO_LINK +=
+
+OCAMLBRICKS=$(LIBRARYPREFIX)/ocamlbricks
+# PP_OPTION = camlp4of -I $(OCAMLBRICKS) gettext_extract_pot_p4.cmo option_extract_p4.cmo raise_p4.cmo log_module_loading_p4.cmo -I chip
+
+# OBJECTS_TO_LINK = gtkThread
+BYTE_PROGRAMS = brain.byte 
+NATIVE_PROGRAMS = brain.native
+
+native: brain.native
+byte: brain.byte
+
+REVISION=0.0.1

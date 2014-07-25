@@ -1,0 +1,4 @@
+name="intelligence2"
+description="blabla"
+version="trunk"
+requires(mt) = "threads str unix ocamlbricks"

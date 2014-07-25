@@ -1,0 +1,191 @@
+import sys
+import camlpynet as cpn
+import threading as th
+import pylab as plb
+import Tkinter   as tk
+from time        import sleep
+from collections import deque
+from socket      import timeout
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+
+def pidscine () :
+
+    # PID control Server
+    try : pidControlServer = cpn.Caml2pyServer("/tmp/pidturtle/control", False)
+    except timeout as err : 
+        raise Exception("Impossible creation of server"), err
+    
+    try : pidControlServer.waitClient()
+    except timeout as err : 
+        raise Exception("No client"), err
+
+    # PID mesure client
+    try : pidMesureClient = cpn.Py2camlClient("/tmp/pidturtle/mesure", False)
+    except timeout as err :
+        raise Exception("Impossible creation of client"), err
+
+    # PID reference client
+    try : pidReferenceClient = cpn.Py2camlClient("/tmp/pidturtle/reference", False)
+    except timeout3 as err :
+        raise Exception("Impossible creation of client"), err
+
+    # TK canvas
+    mainWin = tk.Tk()
+    
+    class Values :
+        def __init__ (self) :
+            self.time = deque([0.])
+            self.control = deque([0.])
+            self.mesure  = deque([0.])
+            self.reference  = deque([0.])
+            self.n    = 0
+            self.lastControl = 0.
+            self.lastMesure = 0.
+            self.lastReference = 0.
+
+    v = Values()
+
+    fig1 = plb.figure(1)
+    ax = fig1.add_subplot(1, 1, 1)
+    ax.grid(True)
+    ax.set_title("title")
+    ax.set_xlabel("time")
+    ax.set_ylabel("mesure reference control")
+    ax.axis([-29, 0,
+             -100., 200.] )
+    
+    mesure = ax.plot(v.mesure)
+    control = ax.plot(v.control)
+    reference = ax.plot(v.reference)
+
+    canvas = FigureCanvasTkAgg(fig1, master = mainWin)
+    canvas.show()
+    canvas.get_tk_widget().pack(side = tk.TOP, fill = tk.BOTH, expand = 1)
+    canvas._tkcanvas.pack(side = tk.TOP, fill = tk.BOTH, expand = 1)
+
+    referenceScale = tk.Scale(master = mainWin, from_ = 0., to = 100., 
+                              orient = tk.HORIZONTAL)
+    referenceScale.set(100.)
+    referenceScale.pack()
+    ax.set_autoscalex_on(True)
+
+    fig1.canvas.draw()
+    background = fig1.canvas.copy_from_bbox(ax.bbox)
+
+    def draw () :
+        fig1.canvas.restore_region(background)
+        mesure[0].set_data(v.time, v.mesure)
+        control[0].set_data(v.time, v.control)
+        reference[0].set_data(v.time, v.reference)
+        ax.set_xlim([v.n - 30, v.n -1])
+        ax.autoscale_view()
+        ax.draw_artist(mesure[0])
+        ax.draw_artist(control[0])
+        ax.draw_artist(reference[0])
+        fig1.canvas.blit(ax.bbox)
+ 
+    def evolve () :
+        
+        if v.n > 30 :
+            v.mesure.popleft()
+            v.reference.popleft()
+            v.control.popleft()
+            v.time.popleft()
+
+        control = v.lastControl
+        reference = referenceScale.get()
+        mesure = v.lastMesure + control
+
+        v.reference.append(reference)
+        v.lastReference = reference
+        
+        v.mesure.append(mesure)
+        v.lastMesure = mesure
+
+        v.control.append(v.lastControl)
+
+        v.time.append(v.n)
+        v.n += 1
+
+        draw ()
+        mainWin.after(0, evolve)
+
+    def _quit () :
+        mainWin.quit()
+        mainWin.destroy()
+
+    buttonQuit = tk.Button(master = mainWin, text = "Quit", command = _quit)
+    buttonQuit.pack(side = tk.BOTTOM)
+
+    mainWin.protocol("WM_DELETE_WINDOW", _quit)
+
+    mainThread = None
+    for t in th.enumerate() :
+        if t.name == "MainThread" : mainThread = t;
+        
+    
+    def pidControlLoop (looping, getData) :
+        while looping() :
+            try :
+                data = getData()
+                try :
+                    control = float(data)
+                    v.lastControl = control
+                    #print >> sys.stderr, "control get : %f" % control
+                except ValueError : 
+                    print >> sys.stderr, "control strange data : %s" % data
+            except timeout :
+                print >> sys.stderr, "*** Control TimeOut ***"
+
+    def pidMesureLoop (looping, sendData) :
+        while looping() :
+            data = str(v.lastMesure)
+            try : 
+                sendData(data)
+            except timeout : 
+                print sys.stderr, "*** Mesure TimeOut ***" 
+            sleep(0.2)
+            
+    def pidReferenceLoop (looping, sendData) :
+        while looping() :
+            data = str(v.lastReference)
+            try :
+                sendData(data)
+            except timeout :
+                print >> sys.stderr, "*** Reference TimeOut ***"
+        sleep(0.2)
+
+    pidControlThread = th.Thread(
+        target = pidControlLoop,
+        args = (mainThread.isAlive, pidControlServer.getData) )
+
+    pidMesureThread = th.Thread(
+        target = pidMesureLoop,
+        args = (mainThread.isAlive, pidMesureClient.sendData) )
+    
+    pidReferenceThread = th.Thread(
+        target = pidReferenceLoop,
+        args = (mainThread.isAlive, pidReferenceClient.sendData) )
+
+    mainWin.after(10, evolve)
+    pidControlThread.start()
+    pidMesureThread.start()
+    pidReferenceThread.start()
+    
+    mainWin.mainloop()
+
+    try :
+        pidControlServer.closeClient()
+        pidControlServer.closeServer()
+        pidMesureClient.close()
+        pidReferenceClient.close()
+    except : raise # TODO
+    finally : 
+        print >> sys.stderr, "End test turtle" 
+        exit()
+
+# end testTurtle
+
+
+if __name__ == "__main__" :
+    pidscine()

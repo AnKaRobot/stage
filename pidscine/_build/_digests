@@ -1,0 +1,5 @@
+"Rule: ocaml: ml -> cmo & cmi (%=pid )": "\127\135J%\202\027z\182\143\191b\254Z\001\254\195"
+"Rule: ocaml dependencies ml (%=pid )": "2\000W\017\017\252\214\189\023\168\178;\007\249\142k"
+"Rule: ocaml: cmx* & o* -> native (%=pid )": "bF\160\151{\024\161b\196g\197Hx\139R\031"
+"Resource: /home/john/WORKING_antoine/pidscine/pid.ml": "\024\127&\244\1630f\182]b\027\204nH!$"
+"Rule: ocaml: ml & cmi -> cmx & o (%=pid )": "\192p\217q&\221\r d3\152B4\007\137\145"

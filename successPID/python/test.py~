@@ -1,0 +1,168 @@
+import camlpynet as cpn
+import threading as th
+import sys
+from socket import timeout
+import turtle as tu
+import Tkinter as tk
+import random as rd
+import time
+import math
+
+refreshTime = 0.1
+
+class Mouse :
+    def __init__ (self, x, y) :
+        self.x = x
+        self.y = y
+    def update (self, event):
+        self.x, self.y = event.x - 250, (- (event.y - 150))
+    def pos (self) :
+        return self.x, self.y
+
+class TurtleControl :
+    def __init__ (self, a) :
+        self.a = a
+    def set (self, a) :
+        self.a = a
+    def get (self) :
+        return self.a
+
+def turtleFdLoop (looping, turtleFd, turtleHd, turtleAngle) :
+    while looping() :
+        turtleHd(turtleAngle())
+        turtleFd(1)
+        time.sleep(refreshTime)
+
+def pidControlLoop (looping, getData, turtleControlSetAngle) :
+    while looping() :
+        try :
+            data = getData()
+            try :
+                degreesOrder = float(data)
+                turtleControlSetAngle(degreesOrder)
+                print >> sys.stderr, "control get : %f" % degreesOrder
+            except ValueError : 
+                print >> sys.stderr, "control strange data : %s" % data
+                pass
+        except timeout :
+            print >> sys.stderr, "***** control TIMEOUT ******"
+            pass
+
+def pidMesureLoop (looping, sendData, turtleGetAngle) :
+    while looping() :
+        sendData(str(float(turtleGetAngle())))
+        time.sleep(refreshTime)
+
+def pidReferenceLoop (looping, sendData, turtlePos, mousePos) :
+    while looping() :
+
+        turtleX, turtleY = turtlePos()
+        mouseX, mouseY = mousePos()
+        opposed = mouseY - turtleY
+        adjacent = mouseX - turtleX
+
+        if adjacent == 0 : adjacent = 0.0001
+
+        tangent = math.degrees(math.atan(opposed / adjacent))
+        
+        degreesTarget = tangent
+        if mouseX < turtleX : 
+            degreesTarget += 180
+        elif tangent < 0 : 
+            degreesTarget += 360
+ 
+        data = str(float(degreesTarget))
+        sendData(data)
+        time.sleep(refreshTime)
+
+def testTurtle () :
+
+    # PID control Server
+    try : pidControlServer = cpn.Caml2pyServer("/tmp/pidturtle/control")
+    except timeout as err : 
+        raise Exception("Impossible creation of server"), err
+    
+    try : pidControlServer.waitClient()
+    except timeout as err : 
+        raise Exception("No client"), err
+
+    # PID mesure client
+    try : pidMesureClient = cpn.Py2camlClient("/tmp/pidturtle/mesure")
+    except timeout as err :
+        raise Exception("Impossible creation of client"), err
+
+    # PID reference client
+    try : pidReferenceClient = cpn.Py2camlClient("/tmp/pidturtle/reference")
+    except timeout as err :
+        raise Exception("Impossible creation of client"), err
+
+    # TK canvas
+    mainWindow = tk.Tk()
+    canvas = tk.Canvas(mainWindow, width = 500, height = 300)
+    canvas.pack()
+
+    mouse = Mouse(0, 0)
+    mainWindow.bind("<Motion>", mouse.update);
+
+    # Turtle
+    turtleScreen = tu.TurtleScreen(canvas)
+    turtleScreen.setworldcoordinates(-250, -150,
+                                     250, 150)
+    turtle = tu.RawTurtle(turtleScreen)
+    turtle.speed("fastest")
+    turtleControl = TurtleControl(0)
+
+    mainThread = None
+    for t in th.enumerate() :
+        if t.name == "MainThread" : mainThread = t;
+
+    pidControlThread = th.Thread(
+        target = pidControlLoop,
+        args = (mainThread.isAlive, 
+                pidControlServer.getData, 
+                turtleControl.set) )
+
+    pidMesureThread = th.Thread(
+        target = pidMesureLoop,
+        args = (mainThread.isAlive, 
+                pidMesureClient.sendData, 
+                turtle.heading) )
+
+    pidReferenceThread = th.Thread(
+        target = pidReferenceLoop,
+        args = (mainThread.isAlive, 
+                pidReferenceClient.sendData, 
+                turtle.pos, 
+                mouse.pos) )
+
+    turtleFdThread = th.Thread(
+        target = turtleFdLoop,
+        args = (mainThread.isAlive, 
+                turtle.forward,
+                turtle.setheading,
+                turtleControl.get) )
+
+    pidControlThread.start()
+    pidMesureThread.start()
+    pidReferenceThread.start()
+    turtleFdThread.start()
+    mainWindow.mainloop()
+
+    try :
+        pidControlServer.closeClient()
+        pidControlServer.closeServer()
+        pidMesureClient.close()
+        pidReferenceClient.close()
+    except : raise # TODO
+    finally : 
+        print >> sys.stderr, "End test turtle" 
+        exit()
+
+# end testTurtle
+
+
+if __name__ == "__main__" :
+    testTurtle()
+
+
+
