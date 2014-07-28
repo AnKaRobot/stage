@@ -6,7 +6,7 @@ include directories are: [ "." ]
 ======> lastpid.ml
 ======> lastpid.ml.depends
 ========> lastpid.ml
-mid rule ocaml dependencies ml (%=lastpid ): cache miss: a product is not in build dir (lastpid.ml.depends)
+mid rule ocaml dependencies ml (%=lastpid ): cache miss: a dependency has changed (lastpid.ml)
 # Target: lastpid.ml.depends, tags: { extension:ml, file:lastpid.ml, ocaml, ocamldep, ourincludesettings, ourocamldocsettings, ourppsettings, quiet, traverse }
 /home/john/.opam/3.12.1/bin/ocamldep.opt -modules lastpid.ml > lastpid.ml.depends
 ======> lastpid.cmi
@@ -15,6 +15,20 @@ mid rule ocaml dependencies ml (%=lastpid ): cache miss: a product is not in bui
 ========> lastpid.mlpack
 ========> lastpid.ml
 ========> lastpid.ml.depends
+========> clock.cmi
+==========> clock.mli
+============> clock.mly
+==========> clock.mlpack
+==========> clock.ml
+============> clock.mll
+============> clock.mly
+========> Clock.cmi
+==========> Clock.mli
+============> Clock.mly
+==========> Clock.mlpack
+==========> Clock.ml
+============> Clock.mll
+============> Clock.mly
 ========> cortex.cmi
 ==========> cortex.mli
 ============> cortex.mly
@@ -71,12 +85,21 @@ mid rule ocaml dependencies ml (%=lastpid ): cache miss: a product is not in bui
 ==========> StringExtra.ml
 ============> StringExtra.mll
 ============> StringExtra.mly
+Warning: Failed to build the module Clock requested by ocamldep
 Warning: Failed to build the module Cortex requested by ocamldep
 Warning: Failed to build the module Cortex_lib requested by ocamldep
 Warning: Failed to build the module StringExtra requested by ocamldep
-mid rule ocaml: ml -> cmo & cmi (%=lastpid ): cache miss: a product is not in build dir (lastpid.cmo)
+mid rule ocaml: ml -> cmo & cmi (%=lastpid ): cache miss: a dependency has changed (lastpid.ml)
 # Target: lastpid.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:lastpid.cmo, file:lastpid.ml, implem, ocaml, ourbytecompilesettings, ourincludesettings, ourocamldocsettings, ourppsettings, quiet, traverse }
 /home/john/.opam/3.12.1/bin/ocamlc.opt -c -thread -g -w x -I /home/john/.opam/3.12.1/lib/ocaml -I /home/john/.opam/3.12.1/lib/ocaml/camlp4 -I /home/john/.opam/3.12.1/lib/ocaml/threads -I /home/john/.opam/3.12.1/lib/camlp4 -I /home/john/.opam/3.12.1/lib/threads -I /home/john/.opam/3.12.1/lib/lablgtk2 -I /home/john/.opam/3.12.1/lib/ocamlbricks -o lastpid.cmo lastpid.ml
+======> clock.cmx
+========> clock.mlpack
+========> clock.ml
+======> Clock.cmx
+========> Clock.mlpack
+========> Clock.ml
+======> clock.cmi
+======> Clock.cmi
 ======> cortex.cmx
 ========> cortex.mlpack
 ========> cortex.ml
@@ -109,10 +132,20 @@ mid rule ocaml: ml -> cmo & cmi (%=lastpid ): cache miss: a product is not in bu
 ========> StringExtra.ml
 ======> stringExtra.cmi
 ======> StringExtra.cmi
-mid rule ocaml: ml & cmi -> cmx & o (%=lastpid ): cache miss: a product is not in build dir (lastpid.cmx)
+mid rule ocaml: ml & cmi -> cmx & o (%=lastpid ): cache miss: a dependency has changed (lastpid.ml)
 # Target: lastpid.cmx, tags: { compile, extension:cmx, extension:ml, file:lastpid.cmx, file:lastpid.ml, implem, native, ocaml, ourincludesettings, ournativecompilesettings, ourocamldocsettings, ourppsettings, quiet, traverse }
 /home/john/.opam/3.12.1/bin/ocamlopt.opt -c -thread -g -w x -I /home/john/.opam/3.12.1/lib/ocaml -I /home/john/.opam/3.12.1/lib/ocaml/camlp4 -I /home/john/.opam/3.12.1/lib/ocaml/threads -I /home/john/.opam/3.12.1/lib/camlp4 -I /home/john/.opam/3.12.1/lib/threads -I /home/john/.opam/3.12.1/lib/lablgtk2 -I /home/john/.opam/3.12.1/lib/ocamlbricks -o lastpid.cmx lastpid.ml
 ====> lastpid.o
+====> clock.o
+======> clock.mlpack
+======> clock.ml
+======> clock.c
+====> Clock.o
+======> Clock.mlpack
+======> Clock.ml
+======> Clock.c
+====> clock.cmi
+====> Clock.cmi
 ====> cortex.o
 ======> cortex.mlpack
 ======> cortex.ml
@@ -153,7 +186,7 @@ mid rule ocaml: ml & cmi -> cmx & o (%=lastpid ): cache miss: a product is not i
 ======> StringExtra.c
 ====> stringExtra.cmi
 ====> StringExtra.cmi
-mid rule ocaml: cmx* & o* -> native (%=lastpid ): cache miss: a product is not in build dir (lastpid.native)
+mid rule ocaml: cmx* & o* -> native (%=lastpid ): cache miss: a dependency has changed (lastpid.o)
 # Target: lastpid.native, tags: { dont_link_with, extension:native, file:lastpid.native, link, native, ocaml, ourcmodules, ourincludesettings, ournativelinksettings, program, quiet, traverse }
 /home/john/.opam/3.12.1/bin/ocamlopt.opt -thread -g -w x -I /home/john/.opam/3.12.1/lib/ocaml -I /home/john/.opam/3.12.1/lib/ocaml/camlp4 -I /home/john/.opam/3.12.1/lib/ocaml/threads -I /home/john/.opam/3.12.1/lib/camlp4 -I /home/john/.opam/3.12.1/lib/threads -I /home/john/.opam/3.12.1/lib/lablgtk2 -I /home/john/.opam/3.12.1/lib/ocamlbricks unix.cmxa threads.cmxa str.cmxa lablgtk.cmxa ocamlbricks.cmxa lastpid.cmx -o lastpid.native
 # Compilation successful.
