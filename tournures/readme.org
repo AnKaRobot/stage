@@ -1,0 +1,20 @@
+* Quelques tournures typiques des résistances
+
+
+** Outillage
+Les bibliothèques ~~Cortex~~ et ~~Cortex_lib~~ de ocamlbricks (Loddo-Saiu).
+*** Pour compiler les exemples
+
+Le plus simpe est d'utiliser ocamlfind comme ceci (exemple en
+compilant sommation.ml) :
+
+~~ocamlfind ocamlc -thread -package threads -package ocamlbricks -linkpkg sommation.ml -o sommation~~
+
+*** Pour faire des printf en présence de threads
+Parfois en environnement thread ~~printf~~ ne passe pas bien. Il est
+plus sûr d'utiliser une fonction maison que nous appelons ~~scream~~
+basée sur [[http://caml.inria.fr/pub/docs/manual-ocaml/libref/Printf.html#VALkfprintf][kfprintf]].
+
+#+BEGIN_SRC ocaml
+let scream fmt = Printf.kfprintf flush stdout fmt
+#+END_SRC
