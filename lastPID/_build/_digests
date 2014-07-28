@@ -1,0 +1,5 @@
+"Rule: ocaml: cmx* & o* -> native (%=lastpid )": "\027\220\141)\147\196\234\192\142\209\014yq\235\153\198"
+"Rule: ocaml dependencies ml (%=lastpid )": "\177\210\209\246\001\012\241\187u3\157\131\132\012\031>"
+"Resource: /home/john/WORKING_antoine/lastPID/lastpid.ml": "s''&;F\135\168\001\180X\245Cl\152\157"
+"Rule: ocaml: ml -> cmo & cmi (%=lastpid )": "]zIh\214D\160&\195\252H\131,h\226\190"
+"Rule: ocaml: ml & cmi -> cmx & o (%=lastpid )": "\201\215\253\2306\153\144$\240d\191\174\195\017\197\164"

@@ -63,7 +63,7 @@ def draw (v, g) :
     g.axe.draw_artist(g.reference[0])
     g.figure.canvas.blit(g.axe.bbox)
 
-def evolve (v, mainWin, draw, g) :
+def evolve (v, mainWin, draw, g, canvas) :
         
     if v.n > 30 :
         v.mesure.popleft()
@@ -143,6 +143,7 @@ def pidscine () :
     g.reference = g.axe.plot(v.reference)
 
     g.figure.canvas.draw()
+    g.background = g.figure.canvas.copy_from_bbox(g.axe.bbox)
 
     # Tk canvas
     mainWin = tk.Tk()
@@ -153,7 +154,6 @@ def pidscine () :
     canvas.get_tk_widget().pack(side = tk.TOP, fill = tk.BOTH, expand = 1)
     canvas._tkcanvas.pack(side = tk.TOP, fill = tk.BOTH, expand = 1)
 
-    g.background = g.figure.canvas.copy_from_bbox(g.axe.bbox)
 
     # Tk Toolbar
     scales.reference = tk.Scale(master = mainWin, label = "Reference", 
@@ -221,7 +221,7 @@ def pidscine () :
         target = pidReferenceLoop,
         args = (mainThread.isAlive, pidReferenceClient.sendData, v) )
 
-    mainWin.after(10, evolve, v, mainWin, draw, g)
+    mainWin.after(10, evolve, v, mainWin, draw, g, canvas)
     pidControlThread.start()
     pidMesureThread.start()
     pidReferenceThread.start()
