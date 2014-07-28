@@ -47,6 +47,14 @@ def update (v, scales) :
     v.minAction = scales.minAction.get()
     v.maxAction = scales.maxAction.get()
 
+def playPause (c) :
+    if c.play : 
+        c.play = False
+        #c.buttonPlayPause.settext("Play")
+    else :      
+        c.play = True
+        #c.buttonPlayPause.text("Pause")
+
 def _quit (mainWin) :
     mainWin.quit()
     mainWin.destroy()
@@ -63,34 +71,36 @@ def draw (v, g) :
     g.axe.draw_artist(g.reference[0])
     g.figure.canvas.blit(g.axe.bbox)
 
-def evolve (v, mainWin, draw, g, canvas) :
+def evolve (v, mainWin, draw, g, c) :
         
-    if v.n > 30 :
-        v.mesure.popleft()
-        v.reference.popleft()
-        v.control.popleft()
-        v.time.popleft()
+    if c.play :
+        if v.n > 30 :
+            v.mesure.popleft()
+            v.reference.popleft()
+            v.control.popleft()
+            v.time.popleft()
 
-    control = v.lastControl
-    if control > v.maxAction : control = v.maxAction;
-    elif control < v.minAction : control = v.minAction;
+        control = v.lastControl
+        if control > v.maxAction : control = v.maxAction;
+        elif control < v.minAction : control = v.minAction;
 
-    mesure = v.lastMesure + control
-    if mesure < 0. : mesure = 0. ;
+        mesure = v.lastMesure + control
+        if mesure < 0. : mesure = 0. ;
 
-    v.reference.append(v.lastReference)
+        v.reference.append(v.lastReference)
     
-    v.mesure.append(mesure)
-    v.lastMesure = mesure
+        v.mesure.append(mesure)
+        v.lastMesure = mesure
+    
+        v.control.append(v.lastControl)
+        #v.lastControl = 0.
 
-    v.control.append(v.lastControl)
-    #v.lastControl = 0.
+        v.time.append(v.n)
+        v.n += 1
 
-    v.time.append(v.n)
-    v.n += 1
-
-    draw (v, g)
-    mainWin.after(100, evolve, v, mainWin, draw, g)
+        draw (v, g)
+    
+    mainWin.after(100, evolve, v, mainWin, draw, g, c)
 
 class Values :
     def __init__ (self) :
@@ -120,6 +130,13 @@ class Graph :
         self.control = None
         self.background = None
 
+class Command :
+    def __init__ (self) :
+        self.play = True
+        self.buttonUpdate = None
+        self.buttonPlayPause = None
+        self.buttonQuit = None
+
 # ----------------------------------- #
 
 def pidscine () :
@@ -136,7 +153,7 @@ def pidscine () :
     g.axe.set_ylabel("mesure reference control")
     g.axe.axis([-29, 0,
                      -100., 200.] )
-    g.axe.set_autoscalex_on(True)
+    #g.axe.set_autoscalex_on(True)
     
     g.mesure = g.axe.plot(v.mesure)
     g.control = g.axe.plot(v.control)
@@ -148,6 +165,7 @@ def pidscine () :
     # Tk canvas
     mainWin = tk.Tk()
     scales = Scales()
+    c = Command()
 
     canvas = FigureCanvasTkAgg(g.figure, master = mainWin)
     canvas.show()
@@ -174,13 +192,17 @@ def pidscine () :
     scales.maxAction.set(v.maxAction)
     scales.maxAction.pack(side = tk.LEFT)
 
-    buttonUpdate = tk.Button(master = mainWin, text = "Apply", 
+    c.buttonUpdate = tk.Button(master = mainWin, text = "Apply", 
                              command = lambda:(update(v, scales)) )
-    buttonUpdate.pack(side = tk.LEFT)
+    c.buttonUpdate.pack(side = tk.LEFT)
 
-    buttonQuit = tk.Button(master = mainWin, text = "Quit", 
+    c.buttonPlayPause = tk.Button(master = mainWin, text = "Pause", 
+                             command = lambda:(playPause(c)) )
+    c.buttonPlayPause.pack(side = tk.LEFT)
+
+    c.buttonQuit = tk.Button(master = mainWin, text = "Quit", 
                            command =lambda:(_quit(mainWin)))
-    buttonQuit.pack(side = tk.LEFT)
+    c.buttonQuit.pack(side = tk.LEFT)
 
     mainWin.protocol("WM_DELETE_WINDOW", lambda:(_quit(mainWin)))
 
@@ -221,7 +243,7 @@ def pidscine () :
         target = pidReferenceLoop,
         args = (mainThread.isAlive, pidReferenceClient.sendData, v) )
 
-    mainWin.after(10, evolve, v, mainWin, draw, g, canvas)
+    mainWin.after(10, evolve, v, mainWin, draw, g, c)
     pidControlThread.start()
     pidMesureThread.start()
     pidReferenceThread.start()
@@ -238,7 +260,7 @@ def pidscine () :
         print >> sys.stderr, "End Pidscine" 
         exit()
 
-# end testTurtle
+# end pidscine
 
 
 if __name__ == "__main__" :
