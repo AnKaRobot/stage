@@ -167,21 +167,20 @@ let group_quintupleTrace
 
 (* ----------------------------------------------------- *)
 
-let sum = returnTrace
-  ~onProposal:begin fun (s0, b0) (s1, b1) -> match b1 with
-    | true -> (s0 + s1, false)
-    | _    -> (s1, b1)
-    end
-  "sum" str2ib (0, false)
-
-let time = Clock.make ~delay:5. ()
-let timePrevious = return 0
+(* let time = Clock.make ~delay:5. () *)
+let time = return 0
+let factors = return (0.5, 0.2, 0.3) (* p, i, d *)
 let mesure = return 0.
-let mesurePrevious = return 0.
-let derivee = return 0.
+let reference = return 0.
+let deriveeTemporal = return 0.
+let sumTemporal = return 0.
+
+let prop = view
+  (fun (m, r) -> r -. m)
+  (group_pair mesure reference)
 
 let strSpecial (i1, i2, f1, f2, f3) = str5 (stri i1) (stri i2) (strf f1) (strf f2) (strf f3)
-let calculDerivee = group_quintupleTrace
+let deriveeTemporalCalcul = group_quintupleTrace
   ~onProposal:begin fun (t0, tp0, m0, mp0, d0) (t1, tp1, m1, mp1, d1) ->
     let dt = t1 - tp1 in
     if dt = 0
@@ -190,5 +189,22 @@ let calculDerivee = group_quintupleTrace
       let d2 = (m1 -. mp1) /. (float_of_int dt) in
       (t1, t1, m1, m1, d2)
     end
-  "calculDerivee" strSpecial
-  time timePrevious mesure mesurePrevious derivee
+  "deriveeTemporalCalcul" strSpecial
+  time (return 0) mesure (return 0.) deriveeTemporal
+
+let strSpecial2 (i1, i2, f1, f2) = str4 (stri i1) (stri i2) (strf f1) (strf f2)
+let sumTemporalCalcul = group_quadrupleTrace
+  ~onProposal:begin fun (t0, tp0, m0, s0) (t1, tp1, m1, s1) ->
+  let dt = t1 - tp1 in 
+  if dt = 0
+  then (t1, tp1, m1, s1)
+  else 
+    let s2 = s1 +. (m1 *. (float_of_int dt)) in
+    (t1, t1, m1, s2)
+  end
+  "sumTemporalCalcul" strSpecial2
+  time (return 0) mesure sumTemporal
+
+let pid = view
+  (fun (p, i, d, (pF, iF, dF)) -> (p *. pF) +. (i *. iF)  +. (d *. dF) )
+  (group_quadruple prop sumTemporal deriveeTemporal factors)
