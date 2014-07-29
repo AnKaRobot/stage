@@ -38,7 +38,7 @@ donc c'est bien, mais c'est encore trop verbeux.
 *** Fonctions basiques de traçage
 Il y a une difficulté dans la tentative d'automatisation du traçage.
 Le type doit être connu à l'avance. Ce qui implique d'écrire le format
-du message (ex : ~"%d %f"~). Aussi, la fonction ~scream~ reçoit des
+du message (ex : ~\"%d %f\"~ ). Aussi, la fonction ~scream~ reçoit des
 arguments sous cette forme : ~scream format arg1 arg2...~. Mais, le
 modèle des résistances nous pousse à avoir des données contenues dans
 des tuples. Or, on ne peut envoyer des tuples à ~scream~.
@@ -56,10 +56,9 @@ Bien entendu, à charge de l'utilisateur de définir les fonctions
 ~currying~ dont il a besoin. Heureusement, cela se fait en temps 
 constant :) .
 Voici une seconde fonction qui se charge d'appliquer une fonction de
-~currying~, un format et un tuple :
+~currying~, un format et un tuple et de renvoyer une ~string~ :
 #+BEGIN_SRC ocaml
-let formatTuple currying format tuple = currying (Printf.sprintf 
-format) tuple
+let formatTuple currying format tuple = currying (Printf.sprintf format) tuple
 #+END_SRC
 
 Nous voilà donc parés pour construire une fonction de traçage.
@@ -84,8 +83,11 @@ let onProposalT ?large label printer values0 values1 values2 =
 #+END_SRC
 Détaillons ses arguments.
 Activer ~large~ rend l'affichage plus grand.
+
 ~label~ est le nom qui sera utilisé pour désigner la résistance.
+
 ~printer~ est la fonction qui transformera les valeurs en ~string~.
+
 Nous verrons plus loin ce qu'il faut lui donner.
 ~values0~ correspond aux valeurs actuelles de la résistance.
 ~values1~ correspond aux valeurs proposées.
@@ -94,7 +96,7 @@ Nous verrons plus loin ce qu'il faut lui donner.
 la fonction à un moment où l'on ne connaît pas encore ces valeurs.
 
 Voici un exemple d'utilisation de cette fonction :
-#+BEGIN_SRC
+#+BEGIN_SRC ocaml
 let a = return
   ~on_proposal:begin fun v0 v1 ->
     let v2 = v1 (* Effectuez des calculs ici *) in
@@ -106,14 +108,14 @@ let a = return
   0
 #+END_SRC
 ce qui affichera par exemple :
-~
+#+BEGIN_SRC
 set a 10 ;;
 ==================== 
 [a] proposal :
  | current  : 0
  | proposed : 10
  | accepted : 10
-~
+#+END_SRC
 Les fonctions pour les autres usages sont trop similaires pour mériter
 une présentation particulière.
 A noter : ~convertT~ est utilisée pour les fonctions de convertion de
