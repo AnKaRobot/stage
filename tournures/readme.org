@@ -8,7 +8,7 @@ Les bibliothèques ~Cortex~ et ~Cortex_lib~ de ocamlbricks (Loddo-Saiu).
 Le plus simpe est d'utiliser ocamlfind comme ceci (exemple en
 compilant sommation.ml) :
 
-~~ocamlfind ocamlc -thread -package threads -package ocamlbricks -linkpkg sommation.ml -o sommation~~
+~ocamlfind ocamlc -thread -package threads -package ocamlbricks -linkpkg sommation.ml -o sommation~
 
 *** Pour faire des printf en présence de threads
 Parfois en environnement thread ~printf~ ne passe pas bien. Il est

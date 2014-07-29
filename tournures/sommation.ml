@@ -150,30 +150,33 @@ let deriver ?(delay=1.0) ?(horloge) data  =
 (* Problème 1 : ce programme givre. *)
 (* Problème 2 : la dérivée calcule faux. *)
 let () =
-  let pour_pendule = Clock.make ~delay:30.0 () in
+  let pour_pendule = Clock.make ~delay:10.0 () in
   let acceleration = return 0. in
   let () =
     let on_proposal (h0, a0) (h1, a1) =
       match h1 mod 3 with
-      | 0 -> (h1, 1.)
+      | 1 -> (h1, 1.)
       | 2 -> (h1, -1.)
       | _ -> (h1, 0.)
     in
     ignore (group_pair ~on_proposal pour_pendule acceleration)
   in
   let horloge = Clock.make ~delay:1.0 () in
-  let vitesse = sommer ~horloge acceleration in
-  let position = sommer ~horloge vitesse in
-  let a = deriver ~horloge (deriver ~horloge position) in
-  let a = return 42. in
+  let vitesse = sommer acceleration in
+  let position = sommer vitesse in
+  let a = deriver (deriver position) in
+  (* let a = return 42. in *)
   let log = group_quintuple
-    ~on_proposal: (fun (_,_,_,_,_) (t,a1,m1,v1,p1)  ->
-      (scream "acceleration : %.1f (%.1f mesuree) \t vitesse : %.1f\t position : %.1f\n"
-         a1
-         m1
-         v1
-         p1
-      ); (t,a1,m1,v1,p1)
+    ~on_proposal: (fun (t0,_,_,_,_) (t,a1,m1,v1,p1)  ->
+      if (t > t0) then
+        (scream "%05d\t acceleration : %.1f (%.1f mesuree) \t vitesse : %.1f\t position : %.1f\n"
+           t
+           a1
+           m1
+           v1
+           p1
+        );
+      (t,a1,m1,v1,p1)
     )
     horloge acceleration a vitesse position in
   ignore log;
