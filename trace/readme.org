@@ -1,3 +1,121 @@
 * Documentation du module Trace 
+ 
+** Introduction
+Les résistances utilisent des mécanismes complexes de stabilisation,
+à savoir les règles récursives de ~on_proposal~ et des ~group~.
+Aussi, il est primordial de les connaître (voir une documentation en
+rapport) et de bien réfléchir avant de commencer à construire un 
+système de résistances.
+Cependant, on peut arriver à un point où l'on ne comprend pas ce qui se
+passe. Par exemple, l'utilisation de thread peut mener à une telle 
+situation.
+Il peut donc être utile de générer des informations sur le système,
+afin de comprendre ce qui se passe.
 
-TODO
+** Méthode manuelle
+Une solution simple est d'intégrer un appel à une fonction qui imprimera
+des informations. 
+Voici une fonction qui écrit, normalement ~thread-safe~ :
+#+BEGIN_SRC ocaml
+let scream fmt = Printf.kfprintf flush stdout fmt
+#+END_SRC
+Où l'appeler ? Par exemple, on peut vouloir savoir
+les différentes valeurs que prendra une résistance. Dans ce cas, on
+pourra écrire
+#+BEGIN_SRC ocaml
+let a = return
+  ~on_commit:begin fun v0 v2 ->
+    scream "a -commit : %d -> %d" v0 v2
+  end
+  0
+#+END_SRC
+
+** Module Trace
+J'ai (Antoine) tenté de créer un module qui facilite l'ajout de méthodes
+de traçage. J'ai partiellement réussi : c'est un peu paramétrable,
+donc c'est bien, mais c'est encore trop verbeux.
+
+*** Fonctions basiques de traçage
+Il y a une difficulté dans la tentative d'automatisation du traçage.
+Le type doit être connu à l'avance. Ce qui implique d'écrire le format
+du message (ex : ~"%d %f"~). Aussi, la fonction ~scream~ reçoit des
+arguments sous cette forme : ~scream format arg1 arg2...~. Mais, le
+modèle des résistances nous pousse à avoir des données contenues dans
+des tuples. Or, on ne peut envoyer des tuples à ~scream~.
+Je ne suis pas parvenu à automatiser le "détuplage", j'ai donc créé les
+fonctions suivantes :
+#+BEGIN_SRC ocaml
+let currying1 f a = f a
+let currying2 f (a, b) = f a b
+let currying3 f (a, b, c) = f a b c
+let currying4 f (a, b, c, d) = f a b c d
+let currying5 f (a, b, c, d, e) = f a b c d e
+#+END_SRC
+Ces fonctions appliquent des arguments à une fonction ~f~.
+Bien entendu, à charge de l'utilisateur de définir les fonctions
+~currying~ dont il a besoin. Heureusement, cela se fait en temps 
+constant :) .
+Voici une seconde fonction qui se charge d'appliquer une fonction de
+~currying~, un format et un tuple :
+#+BEGIN_SRC ocaml
+let formatTuple currying format tuple = currying (Printf.sprintf 
+format) tuple
+#+END_SRC
+
+Nous voilà donc parés pour construire une fonction de traçage.
+Voici la fonction de traçage prévue pour être utilisée dans un
+~on_proposal~ :
+#+BEGIN_SRC ocaml
+let onProposalT ?large label printer values0 values1 values2 =
+  let startMsg = match large with
+  | None -> "[" ^ label ^ "] proposal :" 
+  | _ -> "====================\n[" ^ label ^ "] proposal :"
+  in
+  let btwin = match large with
+  | None -> " "
+  | _ -> "\n | "
+  in
+  let currentValues = btwin ^ "current  : " ^ printer values0 in (* printer is : (formatTuple myCurrying myFormat) *)
+  let proposedValues = btwin ^ "proposed : " ^ printer values1 in
+  let acceptedValues = match values2 with 
+  | None -> ""
+  | Some values -> btwin ^ "accepted : " ^ printer values in
+  scream "%s%s%s%s\n" startMsg currentValues proposedValues acceptedValues
+#+END_SRC
+Détaillons ses arguments.
+Activer ~large~ rend l'affichage plus grand.
+~label~ est le nom qui sera utilisé pour désigner la résistance.
+~printer~ est la fonction qui transformera les valeurs en ~string~.
+Nous verrons plus loin ce qu'il faut lui donner.
+~values0~ correspond aux valeurs actuelles de la résistance.
+~values1~ correspond aux valeurs proposées.
+~values2~ correspond aux valeurs acceptées. Ce paramètre est optionnel
+(il faut lui envoyer ~None~ ou ~Some ...~ car on peut vouloir appeler
+la fonction à un moment où l'on ne connaît pas encore ces valeurs.
+
+Voici un exemple d'utilisation de cette fonction :
+#+BEGIN_SRC
+let a = return
+  ~on_proposal:begin fun v0 v1 ->
+    let v2 = v1 (* Effectuez des calculs ici *) in
+    let () = onProposalT ~large:() 
+      "a" (formatTuple currying1 "%d") 
+      v0 v1 (Some v2) 
+    in
+    v2 end
+  0
+#+END_SRC
+ce qui affichera par exemple :
+~
+set a 10 ;;
+==================== 
+[a] proposal :
+ | current  : 0
+ | proposed : 10
+ | accepted : 10
+~
+Les fonctions pour les autres usages sont trop similaires pour mériter
+une présentation particulière.
+A noter : ~convertT~ est utilisée pour les fonctions de convertion de
+résistances vers d'autres comme dans les ~view~ ou ~connection~.
+
