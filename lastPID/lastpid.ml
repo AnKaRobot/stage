@@ -180,6 +180,7 @@ let prop = view
   (group_pair mesure reference)
 
 let strSpecial (i1, i2, f1, f2, f3) = str5 (stri i1) (stri i2) (strf f1) (strf f2) (strf f3)
+
 let deriveeTemporalCalcul = group_quintupleTrace
   ~onProposal:begin fun (t0, tp0, m0, mp0, d0) (t1, tp1, m1, mp1, d1) ->
     let dt = t1 - tp1 in
@@ -193,6 +194,7 @@ let deriveeTemporalCalcul = group_quintupleTrace
   time (return 0) mesure (return 0.) deriveeTemporal
 
 let strSpecial2 (i1, i2, f1, f2) = str4 (stri i1) (stri i2) (strf f1) (strf f2)
+
 let sumTemporalCalcul = group_quadrupleTrace
   ~onProposal:begin fun (t0, tp0, m0, s0) (t1, tp1, m1, s1) ->
   let dt = t1 - tp1 in 
