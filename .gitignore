@@ -1,0 +1,15 @@
+# emacs
+*~
+# ocaml
+*.annot
+*.cmo
+*.cma
+*.cmi
+*.a
+*.o
+*.cmx
+*.cmxs
+*.cmxa
+# our make workflow
+*/_build/
+*/_tags/
