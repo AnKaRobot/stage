@@ -2,7 +2,7 @@
 
 
 ** Outillage
-Les bibliothèques ~~Cortex~~ et ~~Cortex_lib~~ de ocamlbricks (Loddo-Saiu).
+Les bibliothèques ~Cortex~ et ~Cortex_lib~ de ocamlbricks (Loddo-Saiu).
 *** Pour compiler les exemples
 
 Le plus simpe est d'utiliser ocamlfind comme ceci (exemple en
@@ -11,10 +11,19 @@ compilant sommation.ml) :
 ~~ocamlfind ocamlc -thread -package threads -package ocamlbricks -linkpkg sommation.ml -o sommation~~
 
 *** Pour faire des printf en présence de threads
-Parfois en environnement thread ~~printf~~ ne passe pas bien. Il est
-plus sûr d'utiliser une fonction maison que nous appelons ~~scream~~
-basée sur [[http://caml.inria.fr/pub/docs/manual-ocaml/libref/Printf.html#VALkfprintf][kfprintf]].
+Parfois en environnement thread ~printf~ ne passe pas bien. Il est
+plus sûr d'utiliser une fonction maison que nous appelons ~scream~
+basée sur [[http://caml.inria.fr/pub/docs/manual-ocaml/libref/Printf.html][kfprintf]].
 
 #+BEGIN_SRC ocaml
 let scream fmt = Printf.kfprintf flush stdout fmt
 #+END_SRC
+
+** Le problème avec les résistances
+
+Un des premiers problèmes que posent les résistances est qu'elles nous
+forcent à programmer les ~on_proposal~ de telle sorte que, à chaque
+fois que ~on_proposal x0 x1~ vaut un certain ~x2~, il faut que
+~on_proposal x0 x2~  soit un ~x3~ égal à ~x2~ ou au moins que le
+processus itératif converge de telle sorte que pour un certain ~xn~
+~on_proposal x0 xn~ vaut ~xn~.
