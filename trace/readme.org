@@ -65,24 +65,26 @@ Nous voilà donc parés pour construire une fonction de traçage.
 Voici la fonction de traçage prévue pour être utilisée dans un
 ~on_proposal~ :
 #+BEGIN_SRC ocaml
-let onProposalT ?large label printer values0 values1 values2 =
-  let startMsg = match large with
-  | None -> "[" ^ label ^ "] proposal :" 
-  | _ -> "====================\n[" ^ label ^ "] proposal :"
-  in
-  let btwin = match large with
-  | None -> " "
-  | _ -> "\n | "
-  in
-  let currentValues = btwin ^ "current  : " ^ printer values0 in (* printer is : (formatTuple myCurrying myFormat) *)
-  let proposedValues = btwin ^ "proposed : " ^ printer values1 in
-  let acceptedValues = match values2 with 
-  | None -> ""
-  | Some values -> btwin ^ "accepted : " ^ printer values in
-  scream "%s%s%s%s\n" startMsg currentValues proposedValues acceptedValues
+let onProposalT ?hide ?large label printer values0 values1 values2 =
+  if hide = None then
+    let startMsg = match large with
+    | None -> "[" ^ label ^ "] proposal :" 
+    | _ -> "====================\n[" ^ label ^ "] proposal :"
+    in
+    let btwin = match large with
+    | None -> " "
+    | _ -> "\n | "
+    in
+    let currentValues = btwin ^ "current  : " ^ printer values0 in (* printer is : (formatTuple myCurrying myFormat) *)
+    let proposedValues = btwin ^ "proposed : " ^ printer values1 in
+    let acceptedValues = match values2 with 
+    | None -> ""
+    | Some values -> btwin ^ "accepted : " ^ printer values in
+    scream "%s%s%s%s\n" startMsg currentValues proposedValues acceptedValues
 #+END_SRC
 Détaillons ses arguments.
-Activer ~large~ rend l'affichage plus grand.
+Utiliser ~\~hide:()~ désactive le traçage (dans un but temporaire)
+Utiliser ~\~large:()~ rend l'affichage plus grand.
 
 ~label~ est le nom qui sera utilisé pour désigner la résistance.
 

@@ -9,97 +9,104 @@ let currying4 f (a, b, c, d) = f a b c d
 let currying5 f (a, b, c, d, e) = f a b c d e
 
 (* fonctions basiques de trace *)
-let onProposalT ?large label printer values0 values1 values2 =
-  let startMsg = match large with
-  | None -> "[" ^ label ^ "] proposal :" 
-  | _ -> "====================\n[" ^ label ^ "] proposal :"
-  in
-  let btwin = match large with
-  | None -> " "
-  | _ -> "\n | "
-  in
-  let currentValues = btwin ^ "current  : " ^ printer values0 in (* printer is : (formatTuple myCurrying myFormat) *)
-  let proposedValues = btwin ^ "proposed : " ^ printer values1 in
-  let acceptedValues = match values2 with 
-  | None -> ""
-  | Some values -> btwin ^ "accepted : " ^ printer values in
-  scream "%s%s%s%s\n" startMsg currentValues proposedValues acceptedValues
+let onProposalT ?hide ?large label printer values0 values1 values2 =
+  if hide = None then
+    let startMsg = match large with
+    | None -> "[" ^ label ^ "] proposal :" 
+    | _ -> "====================\n[" ^ label ^ "] proposal :"
+    in
+    let btwin = match large with
+    | None -> " "
+    | _ -> "\n | "
+    in
+    let currentValues = btwin ^ "current  : " ^ printer values0 in (* printer is : (formatTuple myCurrying myFormat) *)
+    let proposedValues = btwin ^ "proposed : " ^ printer values1 in
+    let acceptedValues = match values2 with 
+    | None -> ""
+    | Some values -> btwin ^ "accepted : " ^ printer values in
+    scream "%s%s%s%s\n" startMsg currentValues proposedValues acceptedValues
 
-let onCommitT ?large label printer values0 values2 =
-  let startMsg = match large with
-  | None -> "[" ^ label ^ "] commit :  " 
-  | _ -> "====================\n[" ^ label ^ "] commit :"
-  in
-  let btwin = match large with
-  | None -> " "
-  | _ -> "\n | "
-  in
-  let oldValues = btwin ^ "old : " ^ printer values0 in
-  let newValues = btwin ^ "new : " ^ printer values2 in
-  scream "%s%s%s\n" startMsg oldValues newValues
+let onCommitT ?hide ?large label printer values0 values2 =
+  if hide = None then
+    let startMsg = match large with
+    | None -> "[" ^ label ^ "] commit :  " 
+    | _ -> "====================\n[" ^ label ^ "] commit :"
+    in
+    let btwin = match large with
+    | None -> " "
+    | _ -> "\n | "
+    in
+    let oldValues = btwin ^ "old : " ^ printer values0 in
+    let newValues = btwin ^ "new : " ^ printer values2 in
+    scream "%s%s%s\n" startMsg oldValues newValues
 
-let equalityT ?large label printer valuesA valuesB result =
-  let startMsg = match large with
-  | None -> "[" ^ label ^ "] equality :"
-  | _ -> "====================\n[" ^ label ^ "] equality :"
-  in
-  let btwin = match large with
-  | None -> " "
-  | _ -> "\n | "
-  in
-  let valuesLeft = btwin ^ printer valuesA ^ " ="  in
-  let valuesRight = btwin ^ printer valuesB in
-  let resultMsg = match result with
-  | None -> ""
-  | Some true -> btwin ^ "-> True"
-  | Some false -> btwin ^ "-> False"
-  in
-  scream "%s%s%s%s\n" startMsg valuesLeft valuesRight resultMsg
+let equalityT ?hide ?large label printer valuesA valuesB result =
+  if hide = None then
+    let startMsg = match large with
+    | None -> "[" ^ label ^ "] equality :"
+    | _ -> "====================\n[" ^ label ^ "] equality :"
+    in
+    let btwin = match large with
+    | None -> " "
+    | _ -> "\n | "
+    in
+    let valuesLeft = btwin ^ printer valuesA ^ " ="  in
+    let valuesRight = btwin ^ printer valuesB in
+    let resultMsg = match result with
+    | None -> ""
+    | Some true -> btwin ^ "-> True"
+    | Some false -> btwin ^ "-> False"
+    in
+    scream "%s%s%s%s\n" startMsg valuesLeft valuesRight resultMsg
 
-let convertT ?large label printerA printerB valuesA valuesB =
-  let startMsg = match large with
-  | None -> "[" ^ label ^ "] convert :"
-  | _ -> "====================\n[" ^ label ^ "] convert :"
-  in
-  let btwin = match large with
-  | None -> " "
-  | _ -> "\n | "
-  in
-  let valuesAMsg = btwin ^ printerA valuesA ^ " ->"  in
-  let valuesBMsg = btwin ^ printerB valuesB in
-  scream "%s%s%s\n" startMsg valuesAMsg valuesBMsg
+let convertT ?hide ?large label printerA printerB valuesA valuesB =
+  if hide = None then
+    let startMsg = match large with
+    | None -> "[" ^ label ^ "] convert :"
+    | _ -> "====================\n[" ^ label ^ "] convert :"
+    in
+    let btwin = match large with
+    | None -> " "
+    | _ -> "\n | "
+    in
+    let valuesAMsg = btwin ^ printerA valuesA ^ " ->"  in
+    let valuesBMsg = btwin ^ printerB valuesB in
+    scream "%s%s%s\n" startMsg valuesAMsg valuesBMsg
 
 
 (* fonctions de trace qui s'ajoutent à une fonction définie par l'utilisateur *)
-let onProposalTWrap ?large ?noTraceProposal ?noAnswers ?on_proposal label printer values0 values1 =
+let onProposalTWrap ?hide ?large ?noTraceProposal ?noAnswers ?on_proposal label printer values0 values1 =
     let values2 = match on_proposal with
     | None -> values1 
     | Some f -> f values0 values1
     in
-    let someValues2 = match noAnswers with
-    | None -> Some values2
-    | _ -> None
-    in
-    let () = match noTraceProposal with
-    | None -> onProposalT ?large label printer values0 values1 someValues2 
-    | _ -> () 
+    let () = if hide = None then
+      let someValues2 = match noAnswers with
+      | None -> Some values2
+      | _ -> None
+      in
+      match noTraceProposal with
+      | None -> onProposalT ?large label printer values0 values1 someValues2 
+      | _ -> () 
     in
     values2
 
-let onCommitTWrap ?large ?noTraceCommit ?on_commit label printer values0 values2 =
+let onCommitTWrap ?hide ?large ?noTraceCommit ?on_commit label printer values0 values2 =
   let () = match on_commit with
   | None -> ()
   | Some f -> f values0 values2 
   in
-  match noTraceCommit with
-  | None -> onCommitT ?large label printer values0 values2
-  | _ -> ()
+  if hide = None then
+    match noTraceCommit with
+    | None -> onCommitT ?large label printer values0 values2
+    | _ -> ()
 
-let equalityTWrap ?large ?traceEquality ?noAnswers ?equality label printer valuesA valuesB = 
+let equalityTWrap ?hide ?large ?traceEquality ?noAnswers ?equality label printer valuesA valuesB = 
   let res = match equality with
   | None -> (valuesA = valuesB)
   | Some f -> f valuesA valuesB 
   in
+  let () = if hide = None then
   let someRes = match noAnswers with
   | None -> Some res
   | _ -> None
